@@ -1,0 +1,39 @@
+#!/bin/bash
+
+MOUNTABLE=$(lsblk -lp | grep "^/dev/sd[b-z][1-9]" | awk '{print $1, "(" $4 ")"}')
+
+if [[ "$MOUNTABLE" = "" ]] 
+  then
+    echo "nothing to mount" | dmenu 
+    exit 1
+fi
+
+MOU=$(printf "m\nu" | dmenu -p "mount or unmount?")
+
+case $MOU in 
+  m)
+  TOMOUNT=$(echo "$MOUNTABLE" | dmenu -i -p "which one?" | awk '{print $1}')
+  if [[ $TOMOUNT != ""  ]]
+    then
+      MNTPNT=$(printf "/media/usb1\n/media/usb2\n/mnt" | dmenu -p "where?")
+      sudo mount $TOMOUNT $MNTPNT
+      exit 0
+  else
+    exit 0
+  fi
+  ;;
+  u)
+  MOUNTED=$(lsblk -lp | grep " /media/*" | awk '{print $1}')
+  if [[ $MOUNTED = "" ]]
+  then
+    FAIL=$(echo "ok then..." | dmenu -p "nothing to unmount...")
+    exit 0
+  else
+    TOUNMOUNT=$(echo "$MOUNTED" | dmenu -p "which one?")
+    sudo umount $TOUNMOUNT
+  fi
+  ;;
+  *)
+  exit 1
+  ;;
+esac

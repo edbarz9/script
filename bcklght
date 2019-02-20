@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ ${UID} -ne 0 ]]
+then
+  echo "this should be run as root"
+  exit 1
+fi
+
+LIGHTPATH="/sys/class/backlight/nv_backlight/brightness"
+
+CURRENT=$(cat ${LIGHTPATH})
+
+case $@ in
+  "+")
+    NEW=$(( ${CURRENT} + 5 ))
+    ;; 
+  "-")
+    NEW=$(( ${CURRENT} - 5 ))
+    ;;
+  *)
+    ;;
+esac
+
+if [ $NEW -le 100 -a $NEW -ge 0 ]
+then
+  echo ${NEW} > ${LIGHTPATH}
+  ns "${NEW}"
+fi

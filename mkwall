@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cp "$@" /home/ed/dot/wallpaper
+feh --bg-fill /home/ed/dot/wallpaper
+
+

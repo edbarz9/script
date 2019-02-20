@@ -1,0 +1,11 @@
+#!/bin/bash
+
+TODO=$(task due:today minimal | grep "10m"|awk '{print $2 " " $3 }')
+
+echo "$TODO"
+
+notify-send "$TODO"
+
+TODAY=$(task due:today minimal|grep '\['|awk '{$1=$2="";print $0}')
+
+notify-send -u critical "$TODAY"
